@@ -80,28 +80,26 @@
 
 {#if showProof}
 	<div id="proof-img-parent">
-		<img src={state.activePath} alt="Rivas Web Designs" style="width: {proofWidth + 'px'}; min-width: {proofWidth + 'px'}; height: {proofHeight + 'px'}; opacity: {state.opacity / 10}" />
+		<img src={state.activePath} alt="Proof Overlay" style="width: {proofWidth + 'px'}; min-width: {proofWidth + 'px'}; height: {proofHeight + 'px'}; opacity: {state.opacity / 10}" />
 	</div>
 {/if}
 
 <div id="proof-controls">
 	{#if !showProof}
-		<button on:click={show}>show proof</button>
+		<button class="toggle" on:click={show}>show proof</button>
 	{:else}
-		<button on:click={hide}>hide proof</button>
+		<button class="toggle" on:click={hide}>hide proof</button>
 	{/if}
 
-	<button on:click={switchPaths} disabled={!showProof}>switch proofs</button>
+	<button class="toggle" on:click={switchPaths} disabled={!showProof}>switch proofs</button>
 
-	<div class="opacity-controls">
-		<button disabled={!showProof || state.opacity == 10} on:click={incrementOpacity}>
-			+{opacityStep}
-		</button>
+	<button class="opacity-control" disabled={!showProof || state.opacity == 2} on:click={decrementOpacity}>
+		-{opacityStep}
+	</button>
 
-		<button disabled={!showProof || state.opacity == 2} on:click={decrementOpacity}>
-			-{opacityStep}
-		</button>
-	</div>
+	<button class="opacity-control" disabled={!showProof || state.opacity == 10} on:click={incrementOpacity}>
+		+{opacityStep}
+	</button>
 </div>
 
 <style lang="less">
@@ -127,21 +125,39 @@
 		left: 50%;
 		transform: translate3d(-50%, 0, 0);
 		bottom: 1em;
-		width: 100%;
-
-		button {
-			display: block;
-			width: 100%;
-			font-size: 15px;
-			max-width: 150px;
-			border: 0;
-			padding: 0.5em 0.25em;
-			background-color: #2b3647;
-			color: #fff;
-			margin: 5px;
-			&:disabled {
-				background-color: #ccc;
-			}
+		background-color: #222222cc;
+		padding: 0.25em 0em;
+		border-radius: 0.25em;
+	}
+	button {
+		display: inline-block;
+		vertical-align: top;
+		font-size: 15px;
+		border: 0;
+		padding: 0;
+		background: #3e3e3e;
+		color: #d3d3d3;
+		text-transform: capitalize;
+		line-height: 30px;
+		margin: 0 5px;
+		border: 1px solid #4e4e4e;
+		border-radius: 0.25em;
+		transition: border-color 0.33s ease;
+		&:hover:not(:disabled) {
+			border-color: white;
 		}
+		&:disabled {
+			background-color: #ccc;
+			color: #3e3e3e;
+		}
+	}
+
+	.opacity-control {
+		border-radius: 50%;
+		width: 32px;
+	}
+
+	.toggle {
+		padding: 0 1em;
 	}
 </style>
