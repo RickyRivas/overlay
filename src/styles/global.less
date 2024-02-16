@@ -1,0 +1,84 @@
+@import url('./mixins.less');
+
+// Core styles for entire app
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+:root {
+    --primary: #8A1A23;
+    --secondary: #033B52;
+    --background-color: #faf7f2;
+    --toggleBg: #ffffff;
+    --toggleText: #000000;
+    --global-easing: cubic-bezier(0.85, 0, 0.15, 1);
+    --heading-color: #212121;
+    --global-shadow: rgba(0, 0, 0, 0.04) 0px 3px 5px;
+}
+
+@primaryColor: #8A1A23;
+@secondaryColor: #033B52;
+
+html {
+    overflow-y: scroll;
+}
+
+body {
+    font-family: 'Mona Sans';
+    font-size: 16px;
+    overflow: hidden;
+    display: block;
+    position: relative;
+    background-color: var(--background-color);
+    font-weight: 400;
+
+    @media (min-width: 1300px) {
+        font-size: 20px;
+    }
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.screenreader {
+    white-space: nowrap;
+    height: 1px;
+    width: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+    font-weight: 500;
+    color: var(--heading-color);
+    text-transform: capitalize;
+    line-height: 1;
+}
+
+p {
+    line-height: 1.2;
+}
+
+main {
+    min-height: 1000px;
+    background-color: #f4f4f4;
+}
