@@ -39,14 +39,13 @@
 		showProof = true;
 	}
 
+	console.log('ProofOverlay.js initiated.');
+
 	function switchPaths() {
 		if (state.activePath === proofPaths.index) {
 			state.activePath = proofPaths.sub;
 			update();
-			return;
-		}
-
-		if (state.activePath === proofPaths.sub) {
+		} else {
 			state.activePath = proofPaths.index;
 			update();
 		}
