@@ -1,7 +1,8 @@
 <svelte:options customElement="proof-overlay" />
 
 <script lang="ts">
-	const isProd = false;
+	// After updates, purge cache https://www.jsdelivr.com/tools/purge
+	const isProd = true;
 
 	// Dimensions of the proof images. proofHeight will be updated with each build.
 	export let proofHeight = '4545';
@@ -103,6 +104,7 @@
 </div>
 
 <style lang="less">
+	@import url('https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap');
 	#proof-img-parent {
 		position: relative;
 		display: block;
@@ -112,7 +114,7 @@
 			left: 50%;
 			transform: translate3d(-50%, 0, 0);
 			z-index: 9998;
-			// pointer-events: none;
+			pointer-events: none;
 		}
 	}
 
@@ -121,13 +123,14 @@
 		justify-content: center;
 		align-items: center;
 		position: fixed;
+		padding: 0;
+		gap: 5px;
+		padding: 5px;
 		z-index: 9999;
 		left: 50%;
 		transform: translate3d(-50%, 0, 0);
-		bottom: 1em;
+		bottom: 20px;
 		background-color: #222222cc;
-		padding: 0.25em 0em;
-		border-radius: 0.25em;
 	}
 	button {
 		display: inline-block;
@@ -139,10 +142,12 @@
 		color: #d3d3d3;
 		text-transform: capitalize;
 		line-height: 30px;
-		margin: 0 5px;
 		border: 1px solid #4e4e4e;
-		border-radius: 0.25em;
 		transition: border-color 0.33s ease;
+		font-family: 'Kode Mono', monospace;
+		font-optical-sizing: auto;
+		font-weight: 400;
+		font-style: normal;
 		&:hover:not(:disabled) {
 			border-color: white;
 		}
@@ -158,6 +163,6 @@
 	}
 
 	.toggle {
-		padding: 0 1em;
+		width: 9em;
 	}
 </style>
