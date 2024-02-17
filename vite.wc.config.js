@@ -10,7 +10,7 @@ export default defineConfig({
             fileName: 'proof-overlay',
             formats: [ 'iife' ]
         },
-        outDir: 'dist-js'
+        outDir: 'dist'
     },
     plugins: [ svelte() ]
 });
