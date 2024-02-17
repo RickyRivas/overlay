@@ -2,7 +2,7 @@
 
 <script lang="ts">
 	// After updates, purge cache https://www.jsdelivr.com/tools/purge
-	const isProd = true;
+	const isProd = false;
 
 	// Dimensions of the proof images. proofHeight will be updated with each build.
 	export let proofHeight = '4545';
