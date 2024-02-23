@@ -2,11 +2,7 @@
 
 <script lang="ts">
 	// After updates, purge cache https://www.jsdelivr.com/tools/purge
-	const isProd = false;
-
-	// Dimensions of the proof images. proofHeight will be updated with each build.
-	export let proofHeight = '4545';
-	let proofWidth = '2000';
+	const isProd = true;
 
 	// This widget will primarly be used in a SC production site so path should be relative to their folder structure
 	// Sveltekit sites have a very different site structure so value will change when in Prod
@@ -33,7 +29,9 @@
 	let state = {
 		activePath: proofPaths.index,
 		opacity: 6,
-		position: 'B'
+		position: 'B',
+		proofHeight: '4500',
+		proofWidth: '2000'
 	};
 
 	const savedState = JSON.parse(localStorage.getItem(stateStringName));
@@ -97,11 +95,19 @@
 	function togglePositionControls() {
 		showPositionControls = !showPositionControls;
 	}
+
+	const svgPaths = {
+		left: 'M4.73214 14.2661C3.75595 13.2899 3.75595 11.7046 4.73214 10.7284L14.7282 0.732353C15.4467 0.0138836 16.5166 -0.196972 17.4537 0.193501C18.3909 0.583973 19 1.48987 19 2.5051V22.4973C19 23.5047 18.3909 24.4184 17.4537 24.8089C16.5166 25.1994 15.4467 24.9807 14.7282 24.27L4.73214 14.2739V14.2661Z',
+		bottom:
+			'M14.2661 20.2684C13.2899 21.2445 11.7046 21.2445 10.7284 20.2684L0.732353 10.2723C0.0138837 9.55379 -0.196972 8.48389 0.193501 7.54676C0.583973 6.60963 1.48987 6.00049 2.5051 6.00049H22.4973C23.5047 6.00049 24.4184 6.60963 24.8089 7.54676C25.1994 8.48389 24.9807 9.55379 24.27 10.2723L14.2739 20.2684H14.2661Z',
+		right:
+			'M20.2679 10.7341C21.244 11.7103 21.244 13.2956 20.2679 14.2718L10.2718 24.2678C9.5533 24.9863 8.4834 25.1972 7.54627 24.8067C6.60914 24.4162 6 23.5103 6 22.4951V2.5029C6 1.4955 6.60914 0.581795 7.54627 0.191295C8.4834 -0.199205 9.5533 0.0194952 10.2718 0.730196L20.2679 10.7263V10.7341Z'
+	};
 </script>
 
 {#if showProof}
 	<div id="proof-img-parent">
-		<img src={state.activePath} alt="Proof Overlay" style="width: {proofWidth + 'px'}; min-width: {proofWidth + 'px'}; height: {proofHeight + 'px'}; opacity: {state.opacity / 10}" />
+		<img src={state.activePath} alt="Proof Overlay" style="width: {state.proofWidth + 'px'}; min-width: {state.proofWidth + 'px'}; height: {state.proofHeight + 'px'}; opacity: {state.opacity / 10}" />
 	</div>
 {/if}
 
@@ -128,7 +134,17 @@
 		<button class="opacity-control" disabled={!showProof || state.opacity == 10} on:click={fullOpacity}>F</button>
 	</div>
 
-	<button class="position-control" disabled={!showProof} on:click={togglePositionControls}>{state.position}</button>
+	<button class="position-control" disabled={!showProof} on:click={togglePositionControls}>
+		<svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+			{#if state.position == 'B'}
+				<path d={svgPaths.bottom} fill="currentcolor" />
+			{:else if state.position == 'L'}
+				<path d={svgPaths.left} fill="currentcolor" />
+			{:else}
+				<path d={svgPaths.right} fill="currentcolor" />
+			{/if}
+		</svg>
+	</button>
 
 	<div class="position-options {showPositionControls ? 'active' : ''}">
 		<button
@@ -138,7 +154,9 @@
 				togglePositionControls();
 			}}
 			disabled={state.position == 'B'}>
-			B
+			<svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d={svgPaths.bottom} fill="#fff" />
+			</svg>
 		</button>
 		<button
 			on:click={() => {
@@ -147,7 +165,9 @@
 				togglePositionControls();
 			}}
 			disabled={state.position == 'R'}>
-			R
+			<svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d={svgPaths.right} fill="#fff" />
+			</svg>
 		</button>
 		<button
 			on:click={() => {
@@ -156,7 +176,9 @@
 				togglePositionControls();
 			}}
 			disabled={state.position == 'L'}>
-			L
+			<svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d={svgPaths.left} fill="#fff" />
+			</svg>
 		</button>
 	</div>
 </div>
@@ -257,7 +279,17 @@
 	.position-control {
 		border-radius: 50%;
 		width: 32px;
+		height: 32px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		svg {
+			display: block;
+			width: 50%;
+			height: auto;
+		}
 	}
+
 	.position-options {
 		display: flex;
 		justify-content: center;
@@ -281,6 +313,15 @@
 		button {
 			border-radius: 50%;
 			width: 32px;
+			height: 32px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			svg {
+				display: block;
+				width: 50%;
+				height: auto;
+			}
 		}
 
 		&.active {
