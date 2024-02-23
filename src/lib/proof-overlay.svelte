@@ -2,7 +2,7 @@
 
 <script lang="ts">
 	// After updates, purge cache https://www.jsdelivr.com/tools/purge
-	const isProd = true;
+	const isProd = false;
 
 	// This widget will primarly be used in a SC production site so path should be relative to their folder structure
 	// Sveltekit sites have a very different site structure so value will change when in Prod
