@@ -3,6 +3,8 @@
 <script lang="ts">
 	// After updates, purge cache https://www.jsdelivr.com/tools/purge
 	const isProd = false;
+	export let proofHeight = '4500';
+	const proofWidth = '2000';
 
 	// This widget will primarly be used in a SC production site so path should be relative to their folder structure
 	// Sveltekit sites have a very different site structure so value will change when in Prod
@@ -29,9 +31,7 @@
 	let state = {
 		activePath: proofPaths.index,
 		opacity: 6,
-		position: 'B',
-		proofHeight: '4500',
-		proofWidth: '2000'
+		position: 'B'
 	};
 
 	const savedState = JSON.parse(localStorage.getItem(stateStringName));
@@ -107,7 +107,7 @@
 
 {#if showProof}
 	<div id="proof-img-parent">
-		<img src={state.activePath} alt="Proof Overlay" style="width: {state.proofWidth + 'px'}; min-width: {state.proofWidth + 'px'}; height: {state.proofHeight + 'px'}; opacity: {state.opacity / 10}" />
+		<img src={state.activePath} alt="Proof Overlay" style="width: {proofWidth + 'px'}; min-width: {proofWidth + 'px'}; height: {proofHeight + 'px'}; opacity: {state.opacity / 10}" />
 	</div>
 {/if}
 
