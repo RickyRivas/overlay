@@ -103,6 +103,30 @@
 		right:
 			'M20.2679 10.7341C21.244 11.7103 21.244 13.2956 20.2679 14.2718L10.2718 24.2678C9.5533 24.9863 8.4834 25.1972 7.54627 24.8067C6.60914 24.4162 6 23.5103 6 22.4951V2.5029C6 1.4955 6.60914 0.581795 7.54627 0.191295C8.4834 -0.199205 9.5533 0.0194952 10.2718 0.730196L20.2679 10.7263V10.7341Z'
 	};
+
+	// Eyedropper
+	let eyeDropperColor = '#fff';
+
+	async function initEyedropper() {
+		try {
+			const result = await new EyeDropper().open();
+			console.log(result);
+			eyeDropperColor = result.sRGBHex;
+		} catch (e) {
+			console.log('Eye Dropper cancelled.');
+		}
+	}
+
+	let eyeDropperContainer;
+	let eyeDropperCopySuccess = false;
+	function saveColor() {
+		navigator.clipboard.writeText(eyeDropperColor);
+		eyeDropperCopySuccess = !eyeDropperCopySuccess;
+
+		setTimeout(() => {
+			eyeDropperCopySuccess = !eyeDropperCopySuccess;
+		}, 2000);
+	}
 </script>
 
 {#if showProof}
@@ -134,7 +158,7 @@
 		<button class="opacity-control" disabled={!showProof || state.opacity == 10} on:click={fullOpacity}>F</button>
 	</div>
 
-	<button class="position-control" disabled={!showProof} on:click={togglePositionControls}>
+	<button class="position-control" on:click={togglePositionControls}>
 		<svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
 			{#if state.position == 'B'}
 				<path d={svgPaths.bottom} fill="currentcolor" />
@@ -145,6 +169,36 @@
 			{/if}
 		</svg>
 	</button>
+
+	<button class="eyedropper" on:click={initEyedropper}>
+		<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="none" viewBox="0 0 25 25">
+			<path
+				fill={eyeDropperColor}
+				d="M25 4.184A4.189 4.189 0 0 0 20.816 0a4.155 4.155 0 0 0-2.958 1.226L13.92 5.162l-.45-.45a.568.568 0 0 0-.804 0l-2.272 2.273a.568.568 0 0 0 0 .803l.734.735-8.023 8.023a2.82 2.82 0 0 0-.832 2.01 3.82 3.82 0 0 1-.643 2.123L.095 22.98a.568.568 0 0 0 .071.717l1.137 1.137a.567.567 0 0 0 .717.07l2.401-1.6a3.415 3.415 0 0 1 1.903-.577c.78 0 1.53-.323 2.062-.886 1.041-1.107 7.29-7.213 8.083-7.978l.743.743a.566.566 0 0 0 .803 0l2.273-2.272a.568.568 0 0 0 0-.804l-.45-.45 3.937-3.937A4.156 4.156 0 0 0 25 4.184ZM11.091 15.91H6.956l5.78-5.78 2.125 2.127c-.936.904-2.264 2.19-3.77 3.653Z" />
+		</svg>
+	</button>
+
+	{#if eyeDropperColor != '#fff'}
+		<div class="eyedropper-container {eyeDropperCopySuccess ? 'success' : ''}">
+			<svg
+				on:click={() => {
+					eyeDropperColor = '#fff';
+				}}
+				xmlns="http://www.w3.org/2000/svg"
+				width="32"
+				height="32"
+				fill="none"
+				viewBox="0 0 32 32"
+				aria-hidden="true"
+				role="img">
+				<path
+					fill="#861D1F"
+					d="M16 32a16 16 0 1 0 0-32 16 16 0 0 0 0 32Zm-5.063-21.063a1.494 1.494 0 0 1 2.12 0l2.937 2.938 2.937-2.938a1.494 1.494 0 0 1 2.119 0 1.5 1.5 0 0 1 0 2.12l-2.938 2.937 2.938 2.937a1.494 1.494 0 0 1 0 2.119 1.5 1.5 0 0 1-2.119 0l-2.937-2.938-2.938 2.938a1.494 1.494 0 0 1-2.118 0 1.5 1.5 0 0 1 0-2.119l2.937-2.937-2.938-2.938a1.494 1.494 0 0 1 0-2.118Z" />
+			</svg>
+			<button on:click={saveColor}>{eyeDropperColor}</button>
+			<div class="preview" style="background-color: {eyeDropperColor}"></div>
+		</div>
+	{/if}
 
 	<div class="position-options {showPositionControls ? 'active' : ''}">
 		<button
@@ -333,5 +387,48 @@
 
 	.toggle {
 		width: 9em;
+	}
+
+	.eyedropper {
+		border-radius: 50%;
+		width: 32px;
+		height: 32px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		svg {
+			display: block;
+			width: 50%;
+			height: auto;
+		}
+	}
+
+	.eyedropper-container {
+		display: block;
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
+		bottom: calc(100% + 0.5em);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		border: 1px solid #fff;
+		transition: border-color 0.33s ease;
+		background-color: #3e3e3e;
+		padding: 5px;
+		button {
+			padding: 0 0.5em;
+			text-transform: none;
+			border: 0;
+		}
+		.preview {
+			width: 32px;
+			height: 32px;
+			display: block;
+			border-radius: 50%;
+		}
+		&.success {
+			border-color: #d7ff4f;
+		}
 	}
 </style>
