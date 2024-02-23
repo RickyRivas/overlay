@@ -24,11 +24,16 @@
 	// / 10
 	const opacityStep = 2;
 
+	// B, Bottom position
+	// R, Right position
+	// L, Left position
+
 	// Local storage
 	const stateStringName = 'savedState';
 	let state = {
 		activePath: proofPaths.index,
-		opacity: 6
+		opacity: 6,
+		position: 'B'
 	};
 
 	const savedState = JSON.parse(localStorage.getItem(stateStringName));
@@ -77,6 +82,21 @@
 		state.opacity = state.opacity - opacityStep;
 		update();
 	}
+
+	function lowestOpacity() {
+		state.opacity = 2;
+		update();
+	}
+
+	function fullOpacity() {
+		state.opacity = 10;
+		update();
+	}
+
+	let showPositionControls = false;
+	function togglePositionControls() {
+		showPositionControls = !showPositionControls;
+	}
 </script>
 
 {#if showProof}
@@ -85,22 +105,60 @@
 	</div>
 {/if}
 
-<div id="proof-controls">
-	{#if !showProof}
-		<button class="toggle" on:click={show}>show proof</button>
-	{:else}
-		<button class="toggle" on:click={hide}>hide proof</button>
-	{/if}
+<div id="proof-controls" class="{state.position === 'B' ? 'fixed-bottom' : ''}{state.position === 'L' ? 'fixed-left' : ''}{state.position === 'R' ? 'fixed-right' : ''}">
+	<div class="toggles">
+		{#if !showProof}
+			<button class="toggle" on:click={show}>show proof</button>
+		{:else}
+			<button class="toggle" on:click={hide}>hide proof</button>
+		{/if}
+		<button class="toggle" on:click={switchPaths} disabled={!showProof}>switch proofs</button>
+	</div>
 
-	<button class="toggle" on:click={switchPaths} disabled={!showProof}>switch proofs</button>
+	<div class="opacity-controls">
+		<button class="opacity-control" disabled={!showProof || state.opacity == 2} on:click={decrementOpacity}>
+			-{opacityStep}
+		</button>
 
-	<button class="opacity-control" disabled={!showProof || state.opacity == 2} on:click={decrementOpacity}>
-		-{opacityStep}
-	</button>
+		<button class="opacity-control" disabled={!showProof || state.opacity == 10} on:click={incrementOpacity}>
+			+{opacityStep}
+		</button>
 
-	<button class="opacity-control" disabled={!showProof || state.opacity == 10} on:click={incrementOpacity}>
-		+{opacityStep}
-	</button>
+		<button class="opacity-control" disabled={!showProof || state.opacity == 2} on:click={lowestOpacity}>L</button>
+		<button class="opacity-control" disabled={!showProof || state.opacity == 10} on:click={fullOpacity}>F</button>
+	</div>
+
+	<button class="position-control" disabled={!showProof} on:click={togglePositionControls}>{state.position}</button>
+
+	<div class="position-options {showPositionControls ? 'active' : ''}">
+		<button
+			on:click={() => {
+				state.position = 'B';
+				update();
+				togglePositionControls();
+			}}
+			disabled={state.position == 'B'}>
+			B
+		</button>
+		<button
+			on:click={() => {
+				state.position = 'R';
+				update();
+				togglePositionControls();
+			}}
+			disabled={state.position == 'R'}>
+			R
+		</button>
+		<button
+			on:click={() => {
+				state.position = 'L';
+				update();
+				togglePositionControls();
+			}}
+			disabled={state.position == 'L'}>
+			L
+		</button>
+	</div>
 </div>
 
 <style lang="less">
@@ -117,20 +175,36 @@
 			pointer-events: none;
 		}
 	}
-
 	#proof-controls {
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		position: fixed;
-		padding: 0;
 		gap: 5px;
 		padding: 5px;
 		z-index: 9999;
-		left: 50%;
-		transform: translate3d(-50%, 0, 0);
-		bottom: 20px;
 		background-color: #222222cc;
+		transition: all 0.33s ease;
+
+		&.fixed-bottom {
+			left: 50%;
+			transform: translate3d(-50%, 0, 0);
+			bottom: 20px;
+		}
+
+		&.fixed-right {
+			flex-direction: column;
+			top: 50%;
+			transform: translate3d(0, -50%, 0);
+			right: 20px;
+		}
+
+		&.fixed-left {
+			flex-direction: column;
+			top: 50%;
+			transform: translate3d(0, -50%, 0);
+			left: 20px;
+		}
 	}
 	button {
 		display: inline-block;
@@ -157,9 +231,63 @@
 		}
 	}
 
+	.toggles {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+		gap: 6px;
+	}
+
+	.opacity-controls {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-wrap: wrap;
+		max-width: 3.5em;
+		gap: 5px;
+		background: #3e3e3e;
+		border: 1px solid #4e4e4e;
+	}
+
 	.opacity-control {
 		border-radius: 50%;
 		width: 32px;
+	}
+	.position-control {
+		border-radius: 50%;
+		width: 32px;
+	}
+	.position-options {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 6px;
+		background-color: #222222cc;
+		position: absolute;
+		left: 50%;
+		transform: translate3d(-50%, 0, 0);
+		padding: 0.25em;
+		width: 100%;
+		max-width: 4em;
+		transition:
+			opacity 0.33s ease,
+			bottom 0.33s ease;
+		pointer-events: none;
+		bottom: -100%;
+		opacity: 0;
+
+		button {
+			border-radius: 50%;
+			width: 32px;
+		}
+
+		&.active {
+			bottom: calc(100% + 1em);
+			opacity: 1;
+			pointer-events: all;
+		}
 	}
 
 	.toggle {
