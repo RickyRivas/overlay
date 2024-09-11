@@ -64,6 +64,16 @@
 		proof.height = appData.dimensions.height;
 		proof.src = `${appData.proofsFolderPath}/${appData.activeProofisHome ? appData.prooffilenames.home : appData.prooffilenames.sub}`;
 		proof.style.opacity = appData.opacity;
+		proof.style.width = appData.dimensions.width;
+		proof.style.minWidth = appData.dimensions.width;
+		proof.style.width = appData.dimensions.height;
+		proof.style.position = 'absolute';
+		proof.style.top = '0';
+		proof.style.left = '50%';
+		proof.style.transform = 'translate3d(-50%, 0, 0)';
+		proof.style.zIndex = '9998';
+		proof.style.pointerEvents = 'none';
+
 		// append to body right below the opening tag
 		document.body.insertBefore(proof, document.body.firstChild);
 		appData.showProof = true;
@@ -258,19 +268,6 @@
 
 		p {
 			font-size: 16px;
-		}
-	}
-
-	.displayed-proof {
-		position: absolute;
-		top: 0;
-		left: 50%;
-		transform: translate3d(-50%, 0, 0);
-		z-index: 9998;
-		pointer-events: none;
-
-		@media only screen and (max-width: 1023px) {
-			display: none;
 		}
 	}
 
