@@ -64,9 +64,9 @@
 		proof.height = appData.dimensions.height;
 		proof.src = `${appData.proofsFolderPath}/${appData.activeProofisHome ? appData.prooffilenames.home : appData.prooffilenames.sub}`;
 		proof.style.opacity = appData.opacity;
-		proof.style.width = appData.dimensions.width;
-		proof.style.minWidth = appData.dimensions.width;
-		proof.style.width = appData.dimensions.height;
+		proof.style.width = `${+appData.dimensions.width}px`;
+		proof.style.minWidth = `${+appData.dimensions.width}px`;
+		proof.style.height = `${+appData.dimensions.height}px`;
 		proof.style.position = 'absolute';
 		proof.style.top = '0';
 		proof.style.left = '50%';
