@@ -235,5 +235,353 @@
 </div>
 
 <style lang="less">
-	@import '../styles/overlay.less';
+	* {
+		box-sizing: border-box;
+		padding: 0;
+		margin: 0;
+	}
+
+	.overlayjs-controller {
+		position: fixed;
+		bottom: 25px;
+		left: 50%;
+		transform: translateX(-50%);
+		display: inline-block;
+		vertical-align: top;
+		background-color: #222222cc;
+		padding: 5px;
+		z-index: 9999;
+		display: flex;
+		gap: 5px;
+		justify-content: center;
+		align-items: center;
+
+		p {
+			font-size: 16px;
+		}
+	}
+
+	.displayed-proof {
+		position: absolute;
+		top: 0;
+		left: 50%;
+		transform: translate3d(-50%, 0, 0);
+		z-index: 9998;
+		pointer-events: none;
+
+		@media only screen and (max-width: 1023px) {
+			display: none;
+		}
+	}
+
+	form.settings {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+		width: 500px;
+		position: absolute;
+		bottom: calc(100% + 25px);
+		left: 50%;
+		background-color: #fff;
+		padding: 20px;
+		box-shadow: rgba(0, 0, 0, 0.04) 0px 3px 5px;
+		border: 2px solid #ebebeb;
+		transition:
+			transform 0.33s ease,
+			opacity 0.33s ease;
+		// initial
+		opacity: 0;
+		transform: translate(-50%, 20px);
+		pointer-events: none;
+
+		@media only screen and (max-width: 767px) {
+			width: 100vw;
+		}
+
+		&.show {
+			opacity: 1;
+			transform: translate(-50%, 0px);
+			pointer-events: all;
+		}
+
+		.form-controls {
+			display: flex;
+			gap: 20px;
+		}
+
+		.form-control {
+			@fs: 16;
+			font-size: unit(@fs, px);
+			display: block;
+			color: #000;
+			width: 100%;
+
+			label {
+				display: block;
+			}
+
+			input {
+				font: inherit;
+				display: block;
+				position: relative;
+				width: 100%;
+				font-size: unit(@fs, px);
+				line-height: (50 / @fs);
+				padding: 0 10px;
+				border: 2px solid #ebebeb;
+				outline: 0;
+				transition: border-color 0.33s ease;
+
+				&:focus,
+				&:hover {
+					border-color: #212121;
+				}
+			}
+		}
+
+		#settings-form-submit {
+			font: inherit;
+			display: block;
+			border: 0;
+			border-radius: 0;
+			padding: 0;
+			margin: 0;
+			width: 100%;
+			font-size: unit(16, px);
+			line-height: (50/16);
+			transition:
+				color 0.33s ease,
+				background-color 0.33s ease;
+
+			&:hover {
+				color: #fff;
+				background-color: #212121;
+			}
+		}
+	}
+
+	.selected-color-btn {
+		position: absolute;
+		font: inherit;
+		display: block;
+		font-size: 16px;
+		background-color: #fff;
+		border: 0;
+		border-radius: 0;
+		padding: 0;
+		margin: 0;
+		bottom: calc(100% + 10px);
+		width: 100%;
+		line-height: 25px;
+		text-transform: uppercase;
+		border: 10px solid rgba(256, 256, 256, 0);
+		transition:
+			border-color 0.33s ease,
+			background-color 0.33s ease,
+			color 0.33s ease;
+		outline: 1px solid #212121;
+
+		&.active {
+			background-color: green;
+			color: #fff;
+		}
+	}
+
+	.opacity-btn {
+		font: inherit;
+		display: block;
+		background-color: #fff;
+		border: 0;
+		border-radius: 0;
+		padding: 0;
+		margin: 0;
+		width: 100%;
+		font-size: unit(16, px);
+		line-height: (32/16);
+		width: 32px;
+		border-radius: 50%;
+		transition: background-color 0.33s ease;
+		outline: none;
+
+		&:active:not(:disabled) {
+			background-color: #074ef7;
+		}
+	}
+
+	.opacity-btns {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 5px;
+		width: 32px * 2 + 5px;
+	}
+
+	.other-btns {
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+	}
+
+	.eyedropper {
+		width: 32px;
+		height: 32px;
+		font: inherit;
+		display: block;
+		border: 0;
+		border-radius: 50%;
+		padding: 5px;
+		margin: 0;
+		line-height: 0;
+		background-color: #fff;
+		transition: background-color 0.33s ease;
+		outline: none;
+
+		svg {
+			color: #212121;
+			display: inline-block;
+			width: 100%;
+			height: auto;
+			transition:
+				transform 0.33s ease,
+				color 0.33s ease;
+		}
+
+		&.active,
+		&:hover {
+			svg {
+				transform: rotate(180deg);
+			}
+		}
+
+		&.active {
+			background-color: #074ef7;
+
+			svg {
+				color: #fff;
+			}
+		}
+	}
+
+	.settings-btn {
+		width: 32px;
+		height: 32px;
+		font: inherit;
+		display: block;
+		border: 0;
+		border-radius: 50%;
+		padding: 2.5px;
+		margin: 0;
+		line-height: 0;
+		background-color: #fff;
+		transition: background-color 0.33s ease;
+		outline: none;
+
+		svg {
+			color: #212121;
+			display: inline-block;
+			width: 100%;
+			height: auto;
+			transition:
+				transform 0.33s ease,
+				color 0.33s ease;
+		}
+
+		&.active,
+		&:hover {
+			svg {
+				transform: rotate(180deg);
+			}
+		}
+
+		&.active {
+			background-color: #074ef7;
+
+			svg {
+				color: #fff;
+			}
+		}
+	}
+
+	.switch {
+		position: relative;
+		display: inline-block;
+		width: 60px;
+		height: 32px;
+		background-color: #fff;
+		border-radius: 20px;
+		transition: background-color 0.33s ease;
+
+		&::after {
+			content: 'S';
+			font-size: 14px;
+			line-height: 28px;
+			text-align: center;
+			position: absolute;
+			width: 28px;
+			height: 28px;
+			border-radius: 50%;
+			background-color: white;
+			border: 1px solid #212121;
+			top: 1px; // TO GIVE AN EFFECT OF CIRCLE INSIDE SWITCH.
+			left: 1px;
+			transition: all 0.3s;
+		}
+
+		span {
+			display: inline-block;
+			vertical-align: top;
+			font-size: 14px;
+			line-height: 32px;
+			text-transform: uppercase;
+			margin-left: 1.5px;
+			position: absolute;
+
+			&:nth-child(1) {
+				left: 9px;
+			}
+
+			&:nth-child(2) {
+				right: 12px;
+			}
+		}
+	}
+
+	.switches {
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+	}
+
+	#proof-switch-toggle + .switch {
+		&::after {
+			content: '';
+			background-color: transparent;
+		}
+	}
+
+	#proof-toggle,
+	#proof-switch-toggle {
+		display: none;
+
+		&:disabled + .switch {
+			color: #ccc;
+
+			&::after {
+				border-color: #ccc;
+			}
+		}
+	}
+
+	#proof-toggle:checked + .switch {
+		background-color: #074ef7;
+
+		&::after {
+			transform: translateX(28px);
+		}
+	}
+
+	#proof-switch-toggle:checked + .switch {
+		&::after {
+			transform: translateX(28px);
+		}
+	}
 </style>
