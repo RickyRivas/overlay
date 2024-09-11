@@ -1,5 +1,5 @@
 <!-- required -->
-<svelte:options customElement="proof-overlay" />
+<svelte:options customElement="proof-overlayv2" />
 
 <script>
 	import { onMount } from 'svelte';

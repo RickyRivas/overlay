@@ -6,8 +6,8 @@ export default defineConfig({
     build: {
         lib: {
             entry: resolve(__dirname, 'src/lib/index.js'),
-            name: 'ProofOverlay',
-            fileName: 'proof-overlay',
+            name: 'ProofOverlayv2',
+            fileName: 'proof-overlayv2',
             formats: [ 'iife' ]
         },
         outDir: 'dist'
